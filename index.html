@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nuestro Viaje ❤️</title>
+
+<style>
+body{
+margin:0;
+font-family:'Segoe UI', sans-serif;
+background:linear-gradient(to bottom,#0f0c29,#302b63,#24243e);
+color:white;
+overflow:hidden;
+}
+
+/* Animación estrellas */
+.stars{
+position:fixed;
+width:100%;
+height:100%;
+background:url('https://www.transparenttextures.com/patterns/stardust.png');
+animation:moveStars 60s linear infinite;
+z-index:-1;
+}
+@keyframes moveStars{
+from{background-position:0 0;}
+to{background-position:10000px 5000px;}
+}
+
+.screen{
+position:absolute;
+width:100%;
+height:100vh;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+text-align:center;
+opacity:0;
+transform:scale(0.95);
+transition:all 0.8s ease;
+}
+
+.active{
+opacity:1;
+transform:scale(1);
+}
+
+.hidden{
+display:none;
+}
+
+input{
+padding:12px;
+font-size:18px;
+border-radius:12px;
+border:none;
+text-align:center;
+}
+
+button{
+margin-top:15px;
+padding:12px 25px;
+font-size:18px;
+border:none;
+border-radius:25px;
+background:linear-gradient(45deg,#ff4e91,#ff0066);
+color:white;
+cursor:pointer;
+box-shadow:0 0 15px rgba(255,0,102,0.6);
+transition:0.3s;
+}
+button:hover{
+transform:scale(1.1);
+}
+
+.grid{
+display:flex;
+flex-wrap:wrap;
+justify-content:center;
+width:90%;
+}
+
+.island{
+width:65px;
+height:65px;
+background:linear-gradient(45deg,#ff4e91,#ff0066);
+border-radius:50%;
+display:flex;
+justify-content:center;
+align-items:center;
+margin:12px;
+cursor:pointer;
+box-shadow:0 0 15px rgba(255,0,102,0.7);
+transition:0.4s;
+}
+.island:hover{
+transform:scale(1.2) rotate(10deg);
+}
+
+img{
+max-width:80%;
+max-height:60vh;
+border-radius:25px;
+margin-top:20px;
+box-shadow:0 0 25px rgba(255,255,255,0.6);
+animation:fadeIn 1s ease;
+}
+@keyframes fadeIn{
+from{opacity:0;transform:scale(0.9);}
+to{opacity:1;transform:scale(1);}
+}
+
+#finalMessage{
+font-size:24px;
+padding:25px;
+max-width:800px;
+line-height:1.6;
+animation:fadeIn 2s ease;
+}
+
+.glow{
+animation:glowText 2s infinite alternate;
+}
+@keyframes glowText{
+from{text-shadow:0 0 10px #ff4e91;}
+to{text-shadow:0 0 25px #ff0066;}
+}
+
+</style>
+</head>
+<body>
+
+<div class="stars"></div>
+
+<!-- LOGIN -->
+<div class="screen" id="login" style="opacity:1; transform:scale(1);">
+<h1 class="glow">Bienvenida Nicolle ❤️</h1>
+<p>Ingresa nuestra fecha especial</p>
+<input type="password" id="password">
+<button onclick="checkPassword()">Entrar 🌊</button>
+</div>
+
+<!-- MAPA -->
+<div class="screen hidden" id="map">
+<h1 class="glow">Nuestro viaje de 24 meses 🌴</h1>
+<div class="grid" id="islands"></div>
+</div>
+
+<!-- RECUERDO -->
+<div class="screen hidden" id="memory">
+<h2 id="monthTitle"></h2>
+<img id="photo">
+<p id="text"></p>
+<button onclick="backToMap()">Regresar 🌊</button>
+</div>
+
+<!-- FINAL -->
+<div class="screen hidden" id="final">
+<h1 class="glow">🌅 Nuestro Destino</h1>
+<p id="finalMessage">
+Nicolle…
+
+Gracias por estos dos años maravillosos.  
+Cada mes contigo ha sido una historia distinta,  
+pero todas juntas forman el viaje más hermoso de mi vida.
+
+Contigo aprendí que el amor no es solo sentir,  
+es construir, elegir y crecer juntos.
+
+Si BTS habla de amar intensamente y sin miedo…  
+yo quiero amarte así cada día.
+
+Hoy no solo celebro 24 meses…  
+celebro que quiero todos los que vienen contigo.
+
+¿Sigues esta aventura conmigo para siempre? ❤️
+</p>
+</div>
+
+<audio id="music" loop>
+<source src="euphoria.mp3" type="audio/mpeg"> type="audio/mpeg">
+</audio>
+
+<script>
+
+const correctPassword = "21/02/2024";
+
+const texts = [
+"El inicio de nuestra aventura mágica.",
+"Risas que empezaban a unirnos.",
+"Momentos espontáneos que se volvieron eternos.",
+"Descubriendo lo especial que eras.",
+"Más confianza, más complicidad.",
+"Compartiendo sueños.",
+"Superando pruebas juntos.",
+"Nuestros abrazos ya eran hogar.",
+"Miradas que lo decían todo.",
+"Celebrando logros.",
+"Creando recuerdos únicos.",
+"Un año completo… y el amor creciendo.",
+"Más aventuras.",
+"Más conexión.",
+"Momentos elegantes e inolvidables.",
+"Celebraciones especiales.",
+"Nuevas experiencias.",
+"Aprendiendo el uno del otro.",
+"Risas infinitas.",
+"Amor más fuerte.",
+"Construyendo futuro.",
+"Más unidos que nunca.",
+"Más amor que ayer.",
+"Dos años… y mi corazón sigue eligiéndote."
+];
+
+function changeScreen(from,to){
+document.getElementById(from).classList.remove("active");
+document.getElementById(from).classList.add("hidden");
+document.getElementById(to).classList.remove("hidden");
+setTimeout(()=>document.getElementById(to).classList.add("active"),50);
+}
+
+function checkPassword(){
+const pass = document.getElementById("password").value;
+if(pass === correctPassword){
+changeScreen("login","map");
+document.getElementById("music").play();
+createIslands();
+}else{
+alert("Fecha incorrecta ❤️ intenta otra vez");
+}
+}
+
+function createIslands(){
+const container = document.getElementById("islands");
+for(let i=1;i<=24;i++){
+let island = document.createElement("div");
+island.className="island";
+island.innerText=i;
+island.onclick=()=>openMemory(i);
+container.appendChild(island);
+}
+}
+
+function openMemory(month){
+if(month===24){
+changeScreen("map","final");
+return;
+}
+changeScreen("map","memory");
+document.getElementById("monthTitle").innerText="Mes "+month;
+document.getElementById("photo").src="mes"+month+".jpg";
+document.getElementById("text").innerText=texts[month-1];
+}
+
+function backToMap(){
+changeScreen("memory","map");
+}
+
+</script>
+
+</body>
+</html>
